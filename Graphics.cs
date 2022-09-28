@@ -19,13 +19,12 @@ class GraphicsEngine
         var program = CreateProgram();
 
         // Define a simple triangle
-        CreateVertices(out var vao, out var vbo);
-        rand = new Random();
 
         var location = glGetUniformLocation(program, "color");
-        SetRandomColor(location);
+        SetRandomColor(location, 1, 1, 1);
         long n = 0;
 
+        CreateVertices(out var vao, out var vbo);
         while (!Glfw.WindowShouldClose(window))
         {
             // Swap fore/back framebuffers, and poll for operating system events.
@@ -35,8 +34,8 @@ class GraphicsEngine
             // Clear the framebuffer to defined background color
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if (n++ % 60 == 0)
-                SetRandomColor(location);
+
+
 
             // Draw the triangle.
             glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -45,11 +44,11 @@ class GraphicsEngine
         Glfw.Terminate();
     }
 
-    private static void SetRandomColor(int location)
+    private static void SetRandomColor(int location, float rc, float gc, float bc)
     {
-        var r = (float)rand.NextDouble();
-        var g = (float)rand.NextDouble();
-        var b = (float)rand.NextDouble();
+        var r = rc;
+        var g = gc;
+        var b = bc;
         glUniform3f(location, r, g, b);
     }
 
@@ -148,10 +147,18 @@ class GraphicsEngine
     {
 
         var vertices = new[] {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.0f,  0.5f, 0.0f
+            -0.5f, 0.5f, 1f, 0f, 0f,
+            0.5f,  0.5f,0f, 1f, 0.0f,
+            -0.5f,  -0.5f, 0.0f, 0f, 1f,
+
+            0.5f, 0.5f, 0.0f, 1f, 0f,
+            0.5f, -0.5f, 0f, 1f, 1f,
+            -0.5f, -0.5f, 0f, 0f, 1f
+
+          
         };
+
+        
 
         vao = glGenVertexArray();
         vbo = glGenBuffer();
@@ -168,5 +175,4 @@ class GraphicsEngine
         glEnableVertexAttribArray(0);
     }
 
-    private static Random rand;
 }
